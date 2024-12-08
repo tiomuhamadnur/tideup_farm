@@ -59,10 +59,16 @@ class ProjectResource extends Resource
                         ->required(),
 
                     //grid
-                    Grid::make(2)->schema([
+                    Grid::make(columns: 3)->schema([
+                        //category
+                        Select::make('category_id')
+                            ->label('Category')
+                            ->relationship('category', 'name')
+                            ->required(),
+
                         //location
                         Select::make('location_id')
-                            ->label('location')
+                            ->label('Location')
                             ->relationship('location', 'name')
                             ->required(),
 
@@ -98,6 +104,7 @@ class ProjectResource extends Resource
                 TextColumn::make('name')->searchable(),
                 // TextColumn::make('description')->searchable(),
                 TextColumn::make('modal')->currency('IDR'),
+                TextColumn::make('category.name')->searchable(),
                 TextColumn::make('location.name')->searchable(),
                 TextColumn::make('user.name')->searchable(),
                 TextColumn::make('start_period'),

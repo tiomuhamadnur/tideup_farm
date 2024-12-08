@@ -24,6 +24,11 @@ class Project extends Model
         });
     }
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
     public function location()
     {
         return $this->belongsTo(Location::class);

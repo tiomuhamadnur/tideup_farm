@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->bigInteger('modal')->nullable();
+            $table->bigInteger('category_id')->unsigned()->nullable();
             $table->bigInteger('location_id')->unsigned()->nullable();
             $table->bigInteger('user_id')->unsigned()->nullable();
             $table->date('start_period')->nullable();
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->softDeletes();
             $table->timestamps();
 
+            $table->foreign('category_id')->on('categories')->references('id');
             $table->foreign('location_id')->on('locations')->references('id');
             $table->foreign('user_id')->on('users')->references('id');
         });

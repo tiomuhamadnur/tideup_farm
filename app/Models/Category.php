@@ -23,4 +23,9 @@ class Category extends Model
             $model->uuid = Str::uuid();
         });
     }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
 }
