@@ -15,15 +15,19 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+use Webbingbrasil\FilamentAdvancedFilter\Filters\TextFilter;
 
 class CostResource extends Resource
 {
@@ -44,13 +48,21 @@ class CostResource extends Resource
                         ->required(),
 
                     //grid
-                    Grid::make(4)->schema([
+                    Grid::make(2)->schema([
                         //name
                         TextInput::make('name')
                             ->label('Cost Name')
                             ->placeholder('Cost Name')
                             ->required(),
 
+                        // date
+                        DatePicker::make('date')
+                            ->label('Date')
+                            ->required(),
+                    ]),
+
+                    //grid
+                    Grid::make(3)->schema([
                         // price
                         TextInput::make('price')
                             ->label('Price')
@@ -69,9 +81,10 @@ class CostResource extends Resource
                             ->minValue(1)
                             ->required(),
 
-                        // date
-                        DatePicker::make('date')
-                            ->label('Date')
+                        //unit
+                        Select::make('unit_id')
+                            ->label('Unit')
+                            ->relationship('unit', 'name')
                             ->required(),
                     ]),
 
@@ -79,8 +92,7 @@ class CostResource extends Resource
                     FileUpload::make('image')
                         ->label('Image')
                         ->image()
-                        ->imageEditor()
-                        ->required(),
+                        ->imageEditor(),
                 ])
             ]);
     }
@@ -94,21 +106,23 @@ class CostResource extends Resource
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('price')->currency('IDR'),
                 TextColumn::make('qty')->searchable(),
+                TextColumn::make('unit.code'),
                 TextColumn::make('total_price')->currency('IDR'),
                 ImageColumn::make('image')->circular(),
             ])
-            ->defaultSort('updated_at')
+            ->defaultSort('date')
             ->filters([
                 SelectFilter::make('project_id')
                     ->label('Project')
                     ->relationship('project', 'name'),
-            ])
+            ], layout: FiltersLayout::Modal)
             ->actions([
                 EditAction::make(),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    ExportBulkAction::make(),
                 ]),
             ]);
     }

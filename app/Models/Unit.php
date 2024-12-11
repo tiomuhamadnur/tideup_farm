@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class Cost extends Model
+class Unit extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'costs';
+    protected $table = 'units';
 
     protected $guarded = [];
 
@@ -24,23 +24,8 @@ class Cost extends Model
         });
     }
 
-    public function setTotalPriceAttribute()
+    public function costs()
     {
-        $this->attributes['total_price'] = $this->price * $this->qty;
-    }
-
-    public function project()
-    {
-        return $this->belongsTo(Project::class);
-    }
-
-    public function unit()
-    {
-        return $this->belongsTo(Unit::class);
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(Cost::class);
     }
 }

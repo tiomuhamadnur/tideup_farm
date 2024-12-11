@@ -21,12 +21,14 @@ return new class extends Migration
             $table->text('image')->nullable();
             $table->bigInteger('project_id')->unsigned()->nullable();
             $table->bigInteger('user_id')->unsigned()->nullable();
+            $table->bigInteger('unit_id')->unsigned()->nullable();
             $table->uuid('uuid')->unique()->nullable();
             $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('project_id')->on('projects')->references('id');
             $table->foreign('user_id')->on('users')->references('id');
+            $table->foreign('unit_id')->on('units')->references('id');
         });
     }
 
